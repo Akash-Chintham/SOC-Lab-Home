@@ -1,0 +1,24 @@
+# Never commit real secrets, keys, or captures
+*.pem
+*.key
+*.ovpn
+*.pcap
+*.evtx
+secrets.*
+.env
+
+# VM artifacts (large / machine-specific)
+*.vdi
+*.vbox
+*.vbox-prev
+*.ova
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp

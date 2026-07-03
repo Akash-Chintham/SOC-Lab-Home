@@ -1,0 +1,39 @@
+title: Volume Shadow Copy Deletion via vssadmin/wmic
+id: 8a1e5c40-lab-4d2a-9f00-ransomware-vss
+status: experimental
+description: >
+  Detects deletion of Volume Shadow Copies, a near-universal precursor to
+  ransomware encryption used to inhibit system recovery. Very little benign
+  software deletes all shadow copies, so this is high fidelity.
+author: Akash (SOC Lab)
+date: 2026/07/04
+references:
+  - https://attack.mitre.org/techniques/T1490/
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_vssadmin:
+    Image|endswith:
+      - '\vssadmin.exe'
+      - '\wmic.exe'
+    CommandLine|contains|all:
+      - 'shadow'
+      - 'delete'
+  selection_wbadmin:
+    Image|endswith: '\wbadmin.exe'
+    CommandLine|contains|all:
+      - 'delete'
+      - 'catalog'
+  selection_bcdedit:
+    Image|endswith: '\bcdedit.exe'
+    CommandLine|contains|all:
+      - 'recoveryenabled'
+      - 'no'
+  condition: selection_vssadmin or selection_wbadmin or selection_bcdedit
+falsepositives:
+  - Legitimate backup software or administrator maintenance (rare; whitelist by parent process)
+level: high
+tags:
+  - attack.impact
+  - attack.t1490
